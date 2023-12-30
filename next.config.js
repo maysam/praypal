@@ -8,6 +8,5 @@ const withPWA = require('next-pwa')({
 module.exports = withPWA({
   // config
   output: 'export',
-  fallback: "blocking",
-  assetPrefix: isProd ? 'https://maysam.github.io/praypal/' : undefined,
+  assetPrefix: isProd ? 'https://praypal.codehospital.com/' : undefined,
 })

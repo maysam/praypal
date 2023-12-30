@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import styles from '../styles/Home.module.css'
 import AudioAnalyzer from './AudioAnalyzer'
+import { Button } from "@material-tailwind/react";
 
 export default function Home() {
   const [started, setStarted] = useState(false)
@@ -11,7 +12,20 @@ export default function Home() {
           Welcome to <a href="https://nextjs.org">Next.js!</a>
         </h1>
         <AudioAnalyzer started={started} />
-        <button onClick={() => { setStarted(!started) }}>started: {started ? 'yes' : 'no'}</button>
+        <Button
+        className={styles.btn}
+        onClick={() => { setStarted(!started) }}
+        >
+          {started ? 'Started' : 'Paused'}
+        </Button>
+
+    <div className="flex w-max gap-4">
+      <Button variant="filled">filled</Button>
+      <Button variant="gradient">gradient</Button>
+      <Button variant="outlined">outlined</Button>
+      <Button variant="text">text</Button>
+    </div>
+        <button className={`${styles.btn} ${styles.btn_blue}`} onClick={() => { setStarted(!started) }}>started: {started ? 'yes' : 'no'}</button>
         <p className={styles.description}>
           Get started by editing{' '}
           <code className={styles.code}>pages/index.js</code>
