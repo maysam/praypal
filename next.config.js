@@ -1,3 +1,5 @@
+const isProd = process.env.NODE_ENV === 'production'
+
 /** @type {import('next').NextConfig} */
 const withPWA = require('next-pwa')({
   dest: 'public',
@@ -5,5 +7,7 @@ const withPWA = require('next-pwa')({
 
 module.exports = withPWA({
   // config
-  output: 'export'
+  output: 'export',
+  fallback: "blocking",
+  assetPrefix: isProd ? 'https://maysam.github.io/praypal/' : undefined,
 })
