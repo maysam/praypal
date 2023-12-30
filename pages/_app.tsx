@@ -32,7 +32,7 @@ export default function MyApp({ Component, pageProps }: AppProps) {
         <link rel="apple-touch-icon" href="/apple-icon.png"></link>
         <meta name="theme-color" content="#317EFB" />
       </Head>
-      <Component {...pageProps} />
+      <Component data-theme="lemonade" {...pageProps} />
     </>
   )
 }
