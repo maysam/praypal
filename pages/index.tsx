@@ -1,13 +1,17 @@
+import { useState } from 'react'
 import styles from '../styles/Home.module.css'
+import AudioAnalyzer from './AudioAnalyzer'
 
 export default function Home() {
+  const [started, setStarted] = useState(false)
   return (
     <div className={styles.container}>
       <main className={styles.main}>
         <h1 className={styles.title}>
           Welcome to <a href="https://nextjs.org">Next.js!</a>
         </h1>
-
+        <AudioAnalyzer started={started} />
+        <button onClick={() => { setStarted(!started) }}>started: {started ? 'yes' : 'no'}</button>
         <p className={styles.description}>
           Get started by editing{' '}
           <code className={styles.code}>pages/index.js</code>
@@ -18,6 +22,7 @@ export default function Home() {
             <h3>Documentation &rarr;</h3>
             <p>Find in-depth information about Next.js features and API.</p>
           </a>
+          <audio id="audio-player" className="audio"></audio>
 
           <a href="https://nextjs.org/learn" className={styles.card}>
             <h3 className='text-3xl font-bold underline'>Learn &rarr;</h3>
