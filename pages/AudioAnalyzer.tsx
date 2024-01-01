@@ -1,60 +1,64 @@
 import React, { useState, useEffect } from 'react';
 import getUserMedia from 'get-user-media-promise';
-import detectPitch from 'pitchfinder';
+import { LineChart, XAxis, YAxis, CartesianGrid, Line, ResponsiveContainer } from 'recharts';
+
 type Props = {
   started: boolean
 }
+
 const AudioAnalyzer: React.FC<Props> = (props: Props) => {
   const started = props.started
   const [audioContext, setAudioContext] = useState<AudioContext | null>(null);
-  const [pitch, setPitch] = useState<number | null>(null);
-
+  const [volumes, setVolumes] = useState<{ v: number, v2: number }[]>([])
+  const [message, setMessage] = useState("no message")
   useEffect(() => {
-    if(!started){return}
+    if (started)
+      audioContext?.resume()
+    else
+      audioContext?.suspend()
+  }, [started])
+  useEffect(() => {
+    if (!started) return
     // Initialize the audio context
-    const initAudioContext = async () => {
+    const initAudioContext = async (started: boolean) => {
       const context = new (window.AudioContext || window.webkitAudioContext)();
-      console.log({context,audioContext})
-      console.log(context==audioContext)
-      if(audioContext == null) {
+      console.log({ context, audioContext })
+      console.log(context == audioContext)
+      if (audioContext == null) {
         setAudioContext(context);
       }
 
       try {
         // Get user media (microphone)
-        const stream = await getUserMedia({ audio: true });
-        const source = context.createMediaStreamSource(stream);
+        const mediaStream = await getUserMedia({ audio: true });
+        const microphone = context.createMediaStreamSource(mediaStream);
 
         // Create a script processor node for real-time audio analysis
 
-        await context.audioWorklet.addModule('processors.js').then(() => {
-          let node = new window.AudioWorkletNode(context, "my-worklet-processor");
-          node.port.onmessage = (event) => {
-            // Handling data from the processor.
-            console.log(event.data);
-          };
+        await context.audioWorklet.addModule('processors.js')
 
-          node.port.postMessage('Hello!');
-        })
-
-        const scriptNode = context.createScriptProcessor(2048, 1, 1);
-        source.connect(scriptNode);
-        scriptNode.connect(context.destination);
-
-        // Handle audio data and detect pitch
-        scriptNode.onaudioprocess = (event) => {
-          console.log(event)
-          const samples = event.inputBuffer.getChannelData(0);
-          const pitchValue = detectPitch.YIN()(samples);
-          setPitch(pitchValue);
+        const node = new window.AudioWorkletNode(context, "my-worklet-processor");
+        node.port.onmessage = (event) => {
+          // Handling data from the processor.
+          // console.log("message from node: " + event.data);
+          setMessage(event.data)
+          const volume = parseFloat(event.data)
+          if (started && volume != 0)
+            setVolumes(current => [...current, { v: volume * 1000, v2: current.length }])
         };
+
+        // node.port.postMessage('Hello!');
+
+        microphone.connect(node).connect(context.destination);
+        context.resume()
+
       }
-       catch (error) {
+      catch (error) {
         console.error('Error accessing microphone:', error);
       }
     };
 
-    initAudioContext();
+    initAudioContext(started);
 
     // Cleanup when the component unmounts
     return () => {
@@ -65,8 +69,15 @@ const AudioAnalyzer: React.FC<Props> = (props: Props) => {
   }, [audioContext, started]);
 
   return (
-    <div>
-      <p>{`Detected Pitch: ${pitch || 'N/A'}`}</p>
+    <div style={{ width: '100%', height: 300 }}>
+      <ResponsiveContainer>
+        <LineChart width={500} height={300} data={volumes}>
+          {/* <XAxis dataKey="v2" />
+        <YAxis />
+        <CartesianGrid stroke="#eee" strokeDasharray="5 5" /> */}
+          <Line type="linear" dataKey="v" stroke="green" />
+        </LineChart>
+      </ResponsiveContainer>
     </div>
   );
 };

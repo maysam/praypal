@@ -8,37 +8,22 @@ export default function Home() {
     <div className={styles.container}>
       <main className={styles.main}>
         <h1 className={styles.title}>
-          Welcome to <a href="https://nextjs.org">Next.js!</a>
+          <a href="https://praypal.codehospital.com/">PrayPal!</a>
         </h1>
-        <AudioAnalyzer started={started} />
-        {/* <Button
-        className={styles.btn}
-        onClick={() => { setStarted(!started) }}
-        children={<span>{started ? 'Started' : 'Paused'}</span>}
-        />
+        {started && <AudioAnalyzer started={started} />}
+        <button
+          className="btn  btn-secondary"
+          onClick={() => { setStarted(!started) }}
+        >
+          {started ? 'Stop' : 'Start'}
+        </button>
 
-
-    <div className="flex w-max gap-4">
-      <ButtonGroup title="s">
-      <Button variant="filled">filled</Button>
-      <Button variant="gradient">gradient</Button>
-      <Button variant="outlined">outlined</Button>
-      <Button variant="text">text</Button>
-      </ButtonGroup>
-    </div> */}
-        <button className="btn  btn-primary" onClick={() => { setStarted(!started) }}>started: {started ? 'yes' : 'no'}</button>
-        <button className={`${styles.btn} ${styles.btn_blue}`} onClick={() => { setStarted(!started) }}>started: {started ? 'yes' : 'no'}</button>
-        <p className={styles.description}>
-          Get started by editing{' '}
-          <code className={styles.code}>pages/index.js</code>
-        </p>
 
         <div className={styles.grid}>
           <a href="https://nextjs.org/docs" className={styles.card}>
             <h3>Documentation &rarr;</h3>
             <p>Find in-depth information about Next.js features and API.</p>
           </a>
-          <audio id="audio-player" className="audio"></audio>
 
           <a href="https://nextjs.org/learn" className={styles.card}>
             <h3 className='text-3xl font-bold underline'>Learn &rarr;</h3>
@@ -69,7 +54,7 @@ export default function Home() {
 
       <footer className={styles.footer}>
         <a
-          href="https://vercel.com?utm_source=create-next-app&utm_medium=default-template&utm_campaign=create-next-app"
+          href="https://praypal.codehospital.com/"
           target="_blank"
           rel="noopener noreferrer"
         >
