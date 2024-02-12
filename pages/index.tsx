@@ -1,9 +1,17 @@
 import { useState } from 'react'
 import styles from '../styles/Home.module.css'
 import AudioAnalyzer from './AudioAnalyzer'
+import DayChooser from './DayChooser'
+import PrayerChooser from './PrayerChooser'
 
 export default function Home() {
+  const [day, setDay] = useState("")
+  const [prayer, setPrayer] = useState("")
   const [started, setStarted] = useState(false)
+  if (day == "")
+    return <DayChooser setDay={setDay} />
+  if (prayer == "")
+    return <PrayerChooser setPrayer={setPrayer} />
   return (
     <div className={styles.container}>
       <main className={styles.main}>
